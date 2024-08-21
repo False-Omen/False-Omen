@@ -1,0 +1,81 @@
+-- Combat Script
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Placeholder BP and LF values
+local BP = 1000
+local LF = 1000
+
+-- Function to handle punching
+local function punch()
+    local animation = Instance.new("Animation")
+    animation.AnimationId = ""  -- Replace with Animation ID
+    local animTrack = humanoid:LoadAnimation(animation)
+    animTrack:Play()
+
+    -- Create punch hitbox
+    local hitbox = Instance.new("Part")
+    hitbox.Size = Vector3.new(3, 3, 3)
+    hitbox.Transparency = 1
+    hitbox.CanCollide = false
+    hitbox.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -3)
+    hitbox.Parent = workspace
+
+    -- Detect hit
+    hitbox.Touched:Connect(function(hit)
+        if hit:IsA("Model") and hit:FindFirstChild("Humanoid") then
+            -- Handle damage to shadow clone
+            LF = LF - (LF * 0.001)  -- Lose 0.1% of LF per hit
+            BP = BP + (LF * 0.002)  -- Gain 0.2x LF lost as BP
+            print("Hit Clone! New BP: " .. BP .. " New LF: " .. LF)
+        end
+    end)
+
+    wait(0.5)
+    hitbox:Destroy()  -- Destroy hitbox after a short delay
+end
+
+-- Function to handle heavy attack
+local function heavyAttack()
+    local animation = Instance.new("Animation")
+    animation.AnimationId = ""  -- Replace with Animation ID
+    local animTrack = humanoid:LoadAnimation(animation)
+    animTrack:Play()
+
+    -- Create heavy attack hitbox
+    local hitbox = Instance.new("Part")
+    hitbox.Size = Vector3.new(5, 5, 5)
+    hitbox.Transparency = 1
+    hitbox.CanCollide = false
+    hitbox.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -5)
+    hitbox.Parent = workspace
+
+    -- Detect hit and apply force
+    hitbox.Touched:Connect(function(hit)
+        if hit:IsA("Model") and hit:FindFirstChild("Humanoid") then
+            -- Handle damage and apply force to shadow clone
+            LF = LF - (LF * 0.002)  -- Lose 0.2% of LF per hit
+            BP = BP + (LF * 0.004)  -- Gain 0.4x LF lost as BP
+            print("Heavy Attack! New BP: " .. BP .. " New LF: " .. LF)
+
+            -- Apply force to knockback
+            local humanoidRootPart = hit:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                humanoidRootPart.Velocity = (humanoidRootPart.Position - character.HumanoidRootPart.Position).unit * 50  -- Adjust knockback force
+            end
+        end
+    end)
+
+    wait(1)  -- Duration of heavy attack effect
+    hitbox:Destroy()  -- Destroy hitbox after a short delay
+end
+
+-- Bind punch to MouseButton1 (left mouse button) and heavy attack to MouseButton2 (right mouse button)
+player.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        punch()
+    elseif input.UserInputType == Enum.UserInputType.MouseButton2 then
+        heavyAttack()
+    end
+end)
