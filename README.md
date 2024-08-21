@@ -1,0 +1,7 @@
+- 👋 Hi, I’m @omen
+- 👀 I’m interested in gaming, spending time with my family, and coding!
+- 🌱 I’m currently learning and exploring the world of coding. I've been coding for 2 years.
+- 💞️ I’m looking to collaborate on new projects and expand my coding skills.
+- 📫 How to reach me: Discord (false_omen)
+- 😄 Pronouns: He/Him
+- ⚡ Fun fact: I've been a gamer for over 2 decades and enjoy the thrill of learning new things quickly!
